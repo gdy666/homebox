@@ -23,9 +23,6 @@ export const DEFAULT_CONFIG: Config = {
   parallel: 3,
   unit: RateUnit.BIT,
   theme: systemTheme,
-  baseURL: "", 
+  baseURL: "/api", 
 }
 
-export const getBaseURL = (config?: Config) => {
-  return config?.baseURL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3300')
-}

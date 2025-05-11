@@ -107,9 +107,9 @@ func main() {
 	r.Use(CORSMiddleware())
 	r.Use(StaticEmbedMiddleware(embedFs)) // 静态优先
 
-	r.GET("/ping", pingHandler)
-	r.GET("/download", downloadHandler)
-	r.POST("/upload", uploadHandler)
+	r.GET("/api/ping", pingHandler)
+	r.GET("/api/download", downloadHandler)
+	r.POST("/api/upload", uploadHandler)
 
 	addr := fmt.Sprintf("%s:%d", host, port)
 	fmt.Printf("Starting server on %s...\n", addr)
