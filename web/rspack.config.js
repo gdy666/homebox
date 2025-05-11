@@ -12,7 +12,7 @@ module.exports = {
     filename: "[name].js",
     chunkFilename: "[name].[id].js",
     path: path.resolve(__dirname, '../build/static'),
-    publicPath: prod ? '/static/' : undefined
+    publicPath: prod ? './' : undefined
   },
   builtins: {
     html: [{ template: './src/index.html' }],

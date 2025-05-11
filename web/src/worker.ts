@@ -7,8 +7,9 @@ import { upload } from './cases/upload'
 
 const channelModule = {
   name: () => 'some name',
-  download,
-  upload,
+  download: (args: any) => download(args.baseURL)(args),
+  // 同理修改 upload 方法（假设 upload.ts 有类似调整）
+  upload: (args: any) => upload(args.baseURL)(args),
 }
 
 export type ChannelModule = typeof channelModule

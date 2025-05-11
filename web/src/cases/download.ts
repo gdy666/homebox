@@ -95,10 +95,10 @@ export function* xhrDownload(count: number = 10): Generator<DownloadProgressStat
   return {} as any
 }
 
-export const fiberDownload = createFiber((count = 16) => {
+export const fiberDownload =(baseURL: string) =>  createFiber((count = 16) => {
   return new Observable((sub) => {
     const abort = new AbortController()
-    fetch(`${BASE_URL}/download?count=${count}`, {
+    fetch(`${baseURL}/download?count=${count}`, {
       method: 'get',
       signal: abort.signal,
     })
@@ -135,4 +135,4 @@ export const fiberDownload = createFiber((count = 16) => {
   })
 })
 
-export const download = createFiberGroup(fiberDownload)
+export const download =  (baseURL: string) =>createFiberGroup(fiberDownload(baseURL))

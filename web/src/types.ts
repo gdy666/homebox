@@ -37,6 +37,7 @@ export interface Config {
   duration: number
   parallel: number
   theme: Theme
+  baseURL: string  // 新增 baseURL 字段
 }
 
 export enum Theme {

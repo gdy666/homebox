@@ -51,7 +51,7 @@ export function RunCaseOnce() {
   const [ttl, pushTTL, clearTTL] = useRates(5)
   const [step, setStep] = useState(RunningStep.NONE)
   const createChannels = useContext(ChannelsContext)
-  const { duration, parallel, packCount, unit } = useContext(ConfigContext)
+  const { duration, parallel, packCount, unit,baseURL  } = useContext(ConfigContext)
 
   const _start = async () => {
     clearTTL()
@@ -59,7 +59,7 @@ export function RunCaseOnce() {
     await interval(500)
       .pipe(
         take(10),
-        mergeMap(() => ping()),
+        mergeMap(() => ping(baseURL )),
       )
       .forEach((v) => {
         pushTTL(v)
@@ -74,11 +74,13 @@ export function RunCaseOnce() {
           packCount,
           parallel,
           interval: 500,
+          baseURL: baseURL,
         }),
       ),
     ).forEach((v) => {
       setDlRate(v.reduce((a, b) => a + b, 0))
     })
+
 
     setStep(RunningStep.UPLOAD)
 
@@ -89,6 +91,7 @@ export function RunCaseOnce() {
           packCount,
           parallel,
           interval: 500,
+          baseURL: baseURL,
         }),
       ),
     ).forEach((v) => {

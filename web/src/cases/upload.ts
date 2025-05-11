@@ -6,7 +6,7 @@ const blob1M = new Blob([new ArrayBuffer(1024 * 1024)])
 let blobCache: Blob
 let blobCacheCount: number
 
-const fiberUpload = createFiber(
+const fiberUpload =  (baseURL: string) =>  createFiber(
   (count = 64) =>
     new Observable((sub) => {
       const xhr = new XMLHttpRequest()
@@ -50,4 +50,4 @@ const fiberUpload = createFiber(
     }),
 )
 
-export const upload = createFiberGroup(fiberUpload)
+export const upload =  (baseURL: string) =>createFiberGroup(fiberUpload(baseURL))

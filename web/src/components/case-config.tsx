@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
-import { NumericInput, FormGroup, RadioGroup, Radio, Slider, Button, ButtonGroup, Collapse } from '@blueprintjs/core'
+import { NumericInput, FormGroup,InputGroup, RadioGroup, Radio, Slider, Button, ButtonGroup, Collapse } from '@blueprintjs/core'
 import { RunningMode, SpeedMode, Config, RateUnit, Theme } from '../types'
 import { css } from '@emotion/react'
 import { Var, ThemeVar } from '../styles/variable'
@@ -258,6 +258,14 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
         defaultValue?.duration === Infinity ? 10 : (defaultValue?.duration ?? 10 * 1000) / 1000,
       ),
       theme: createFormField(defaultValue?.theme ?? Theme.Light, {}),
+      baseURL: createFormField(defaultValue?.baseURL ?? '', {
+        validate: (value) => {
+          if (value && !/^https?:\/\/.+/i.test(value)) {
+            return '请输入有效的URL，必须以http://或https://开头'
+          }
+          return null
+        }
+      }),
     })
 
     group.whenChanged((nv, ov) => {
@@ -283,6 +291,7 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
           unit: nv.unit,
           duration: nv.runningMode === RunningMode.ONCE ? nv.duration * 1000 : Infinity,
           theme: nv.theme,
+          baseURL: nv.baseURL,
         })
       }
     })
@@ -290,7 +299,7 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
   }, [])
   const [isAdvancedConfig, setAdvancedConfig] = useState(false)
 
-  const { runningMode, threadCount, speedRange, packCount, duration, unit, parallel, theme } = form.fields
+  const { runningMode, threadCount, speedRange, packCount, duration, unit, parallel, theme,baseURL } = form.fields
   return (
     <div>
       <$Header>
@@ -357,6 +366,19 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
             margin-bottom: 24px;
           `}
         >
+           <FormGroup 
+            label="自定义服务器地址" 
+            helperText="留空则使用默认地址"
+            key="baseURL"
+          >
+            <InputGroup
+              value={form.fields.baseURL.value}
+              onChange={(e) => form.fields.baseURL.onChange(e.currentTarget.value)}
+              placeholder="http://localhost:3300"
+              
+            />
+          </FormGroup>
+
           {runningMode.value === RunningMode.ONCE && (
             <FormGroup label='测速持续时间' labelInfo='(s)' key='duration' inline={true}>
               <NumericInput value={duration.value} onValueChange={duration.onChange} />
