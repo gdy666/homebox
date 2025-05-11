@@ -11,7 +11,7 @@ module.exports = {
   output: {
     filename: "[name].js",
     chunkFilename: "[name].[id].js",
-    path: path.resolve(__dirname, '../build/static'),
+    path: path.resolve(__dirname, '../server/build/static'),
     publicPath: prod ? './' : undefined
   },
   builtins: {

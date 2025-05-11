@@ -3,3 +3,7 @@
 .DS_Store
 
 /build
+
+/
+server/build/static/*
+*.exe
