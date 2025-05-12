@@ -247,6 +247,11 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
   onChangeRef.current = props.onChange
   const form = useMemo(() => {
     const { defaultValue } = props
+    
+    // 从URL参数中读取baseurl
+    const urlParams = new URLSearchParams(window.location.search);
+    const baseUrlFromParams = urlParams.get('baseurl') || '';
+    
     const group = createFormObjectGroup({
       runningMode: createFormField(defaultValue?.duration !== Infinity ? RunningMode.ONCE : RunningMode.CONTINUE, {}),
       threadCount: createFormField(defaultValue?.threadCount ?? 1, {}),
@@ -258,7 +263,7 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
         defaultValue?.duration === Infinity ? 10 : (defaultValue?.duration ?? 10 * 1000) / 1000,
       ),
       theme: createFormField(defaultValue?.theme ?? Theme.Light, {}),
-      baseURL: createFormField(defaultValue?.baseURL ?? '', {
+      baseURL: createFormField(baseUrlFromParams || defaultValue?.baseURL || '', {
         validate: (value) => {
           if (value && !/^https?:\/\/.+/i.test(value)) {
             return '请输入有效的URL，必须以http://或https://开头'
@@ -281,6 +286,34 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
         }
         return
       }
+
+      // 当baseURL变化时，更新URL参数
+      if (nv.baseURL !== ov.baseURL) {
+        // 使用自定义方式构建URL，避免对baseURL中的特殊字符进行编码
+        const currentUrl = new URL(window.location.href);
+        const baseUrl = currentUrl.origin + currentUrl.pathname;
+        const params = new URLSearchParams(currentUrl.search);
+        
+        // 移除当前的baseurl参数
+        params.delete('baseurl');
+        
+        // 构建新的URL
+        let newUrl = baseUrl;
+        
+        // 添加其他参数（除了baseurl）
+        const otherParams = params.toString();
+        if (otherParams) {
+          newUrl += '?' + otherParams;
+        }
+        
+        // 如果有baseURL，手动添加到URL中，不进行编码
+        if (nv.baseURL) {
+          newUrl += (otherParams ? '&' : '?') + 'baseurl=' + nv.baseURL;
+        }
+        
+        window.history.replaceState({}, '', newUrl);
+      }
+      
       setCount((v) => v + 1)
       if (onChangeRef.current) {
         onChangeRef.current({
