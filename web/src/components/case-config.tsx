@@ -338,7 +338,19 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
               b/s
             </Button>
           </ButtonGroup>
-          <ButtonGroup css={$valm}>
+          <InputGroup
+            css={css`
+              margin-left: 10px;
+              width: 250px;
+              display: inline-flex;
+              vertical-align: middle;
+            `}
+            value={form.fields.baseURL.value}
+            onChange={(e) => form.fields.baseURL.onChange(e.currentTarget.value)}
+            placeholder="输入测速后端地址"
+            leftIcon="globe-network"
+          />
+          <ButtonGroup css={css`margin-left: 10px; ${$valm}`}>
             <Button
               onClick={() => setAdvancedConfig(!isAdvancedConfig)}
               intent={isAdvancedConfig ? 'success' : 'none'}
@@ -347,27 +359,6 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
               {isAdvancedConfig ? '切换到普通配置' : '切换到高级配置'}
             </Button>
           </ButtonGroup>
-          <span css={css`
-            margin-left: 10px;
-            font-size: 12px;
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background-color: ${baseURL.value ? '#0D8050' : '#F5F8FA'};
-            color: ${baseURL.value ? '#fff' : '#5C7080'};
-            border: 1px solid ${baseURL.value ? '#0D8050' : '#BFCCD6'};
-          `}>
-            <span css={css`
-              margin-right: 4px;
-              display: inline-flex;
-            `}>
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                <path fillRule="evenodd" clipRule="evenodd" d="M2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm2-1a1 1 0 00-1 1v4a1 1 0 001 1h8a1 1 0 001-1V6a1 1 0 00-1-1H4zm1 2h1v2H5V7zm3 0H7v2h1V7zm1 0h1v2H9V7z" />
-              </svg>
-            </span>
-            {baseURL.value ? `${baseURL.value}` : '使用默认后端'}
-          </span>
         </$HeaderLeft>
         <$HeaderRight>
           <Button
@@ -387,19 +378,6 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
             margin-bottom: 24px;
           `}
         >
-           <FormGroup 
-            label="自定义测速后端地址" 
-            helperText="自定义测速后端地址"
-            key="baseURL"
-          >
-            <InputGroup
-              value={form.fields.baseURL.value}
-              onChange={(e) => form.fields.baseURL.onChange(e.currentTarget.value)}
-              placeholder="http://localhost:3300"
-              
-            />
-          </FormGroup>
-
           {runningMode.value === RunningMode.ONCE && (
             <FormGroup label='测速持续时间' labelInfo='(s)' key='duration' inline={true}>
               <NumericInput value={duration.value} onValueChange={duration.onChange} />
