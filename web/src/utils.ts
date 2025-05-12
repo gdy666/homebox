@@ -2,7 +2,7 @@ import { RateUnit } from './types'
 
 const byteUnit = ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s']
 const bitUnit = ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps']
-const rateBase = 1024
+const rateBase = 1000
 
 export function formatByteRate(rate: number) {
   let level = 0
