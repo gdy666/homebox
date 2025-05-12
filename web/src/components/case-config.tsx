@@ -368,7 +368,7 @@ export function CaseConfig(props: { defaultValue?: Config; onChange?: (v: Config
         >
            <FormGroup 
             label="自定义测速后端地址" 
-            helperText="除非使用集成版，否则不应该留空"
+            helperText="自定义测速后端地址"
             key="baseURL"
           >
             <InputGroup
