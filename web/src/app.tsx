@@ -35,6 +35,18 @@ export function App() {
       if (parsedConfig.duration === null) {
         parsedConfig.duration = Infinity
       }
+      
+      // 从URL参数中获取baseURL
+      const urlParams = new URLSearchParams(window.location.search)
+      const baseUrlParam = urlParams.get('baseurl')
+      
+      // 如果URL中存在baseurl参数，则更新配置
+      if (baseUrlParam) {
+        parsedConfig.baseURL = baseUrlParam
+        // 将更新后的配置保存到localStorage
+        localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(parsedConfig))
+      }
+      
       return parsedConfig
     } catch (e) {
       return DEFAULT_CONFIG
