@@ -51,11 +51,12 @@ func downloadHandler(c *gin.Context) {
 }
 
 func uploadHandler(c *gin.Context) {
-	_, err := io.Copy(io.Discard, c.Request.Body)
-	if err != nil {
-		c.String(500, "upload error")
-		return
-	}
+	// _, err := io.Copy(io.Discard, c.Request.Body)
+	// if err != nil {
+	// 	c.String(500, "upload error")
+	// 	return
+	// }
+	io.Copy(io.Discard, c.Request.Body)
 	c.Status(200)
 }
 
