@@ -7,7 +7,7 @@ import { Subscription, zip } from 'rxjs'
 
 export function CaseRunner(props: { name: 'upload' | 'download'; title: string }) {
   const createChannels = useContext(ChannelsContext)
-  const { duration, packCount, parallel } = useContext(ConfigContext)
+  const { duration, packCount, parallel,baseURL } = useContext(ConfigContext)
   const [rate, setRate] = useState(-1)
   const [running, setRunning] = useState(false)
   const sub = useRef<Subscription | null>(null)
@@ -22,7 +22,7 @@ export function CaseRunner(props: { name: 'upload' | 'download'; title: string }
     setRunning(true)
     const channels = await createChannels()
     sub.current = zip(
-      ...channels.map((channel) => channel.observe(props.name, { packCount, duration, interval: 300, parallel })),
+      ...channels.map((channel) => channel.observe(props.name, { packCount, duration, interval: 300, parallel ,baseURL: baseURL,})),
     ).subscribe({
       next(rate) {
         setRate(rate.reduce((a, b) => a + b, 0))
