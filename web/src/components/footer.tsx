@@ -44,6 +44,7 @@ const ResultInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
   
   .timestamp {
     color: ${Var(ThemeVar.FooterColor)};
@@ -90,6 +91,42 @@ const DeleteButton = styled.button`
   }
 `
 
+const DeleteActions = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+`
+
+const ConfirmButton = styled.button`
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #ff7875;
+  }
+`
+
+const CancelButton = styled.button`
+  background: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #1890ff;
+    color: #1890ff;
+  }
+`
+
 const ResultsHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -114,18 +151,17 @@ export function Footer() {
   const [speedResults, setSpeedResults] = useState<SpeedTestResult[]>([])
   const [deleteConfirmIndex, setDeleteConfirmIndex] = useState<number | null>(null)
 
+  const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null)
+
   const showDeleteConfirm = (index: number) => {
-    setDeleteConfirmIndex(index)
+    setPendingDeleteIndex(index)
   }
 
   const handleDeleteCancel = () => {
-    setDeleteConfirmIndex(null)
+    setPendingDeleteIndex(null)
   }
 
-  const handleDeleteConfirm = () => {
-    if (deleteConfirmIndex === null) return
-    
-    const index = deleteConfirmIndex
+  const handleDeleteConfirm = (index: number) => {
     const storedResults = localStorage.getItem(SPEED_TEST_STORAGE_KEY)
     if (storedResults) {
       try {
@@ -141,8 +177,8 @@ export function Footer() {
           // 触发事件通知其他组件
           window.dispatchEvent(new CustomEvent('speedTestResultsUpdated'))
           
-          // 关闭确认对话框
-          setDeleteConfirmIndex(null)
+          // 关闭确认状态
+          setPendingDeleteIndex(null)
         }
       } catch (e) {
         console.error('Failed to delete speed test result:', e)
@@ -198,6 +234,7 @@ export function Footer() {
                 <div className="timestamp">
                   {new Date(result.timestamp).toLocaleString()}
                 </div>
+
                 <div className="metrics">
                   <div className="metric">
                     <span className="label">Ping:</span>
@@ -215,9 +252,20 @@ export function Footer() {
                     <span className="label">服务器:</span>
                     <span className="value">{result.baseURL}</span>
                   </div>
-                </div>
+
+                  {pendingDeleteIndex === index ? (
+                  <DeleteActions>
+                    <ConfirmButton onClick={() => handleDeleteConfirm(index)}>确认删除</ConfirmButton>
+                    <CancelButton onClick={handleDeleteCancel}>取消</CancelButton>
+                  </DeleteActions>
+                ) : (
+                  <DeleteButton onClick={() => showDeleteConfirm(index)}>删除</DeleteButton>
+                )}
+
+
+                </div> 
               </ResultInfo>
-              <DeleteButton onClick={() => showDeleteConfirm(index)}>删除</DeleteButton>
+              
             </SpeedResultItem>
           ))}
         </SpeedResultsContainer>
