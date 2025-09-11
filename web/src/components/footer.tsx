@@ -81,6 +81,7 @@ const DeleteButton = styled.button`
   padding: 4px 8px;
   border-radius: 4px;
   transition: all 0.2s ease;
+  margin-left: auto;
   
   &:hover {
     background: rgba(255, 77, 79, 0.1);
