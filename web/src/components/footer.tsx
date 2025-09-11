@@ -14,7 +14,7 @@ const FooterContainer = styled.div`
 const SpeedResultsContainer = styled.div`
   margin-top: 16px;
   font-size: 13px;
-  max-height: calc(80vh - 60px);
+  max-height: calc(75vh - 60px);
   min-height: 100px;
   overflow-y: auto;
   border-radius: 6px;
