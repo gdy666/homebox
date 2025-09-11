@@ -21,6 +21,11 @@ const SpeedResultsContainer = styled.div`
   background: rgba(0, 0, 0, 0.02);
   padding: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  @media (max-width: 768px) {
+    max-height: calc(60vh - 60px);
+    padding: 8px;
+    font-size: 12px;
+  }
 `
 
 const SpeedResultItem = styled.div`
@@ -37,6 +42,13 @@ const SpeedResultItem = styled.div`
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
   }
 `
 
@@ -96,6 +108,14 @@ const DeleteActions = styled.div`
   display: flex;
   gap: 8px;
   margin-left: auto;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 `
 
 const ConfirmButton = styled.button`
