@@ -23,6 +23,6 @@ export const DEFAULT_CONFIG: Config = {
   parallel: 3,
   unit: RateUnit.BIT,
   theme: systemTheme,
-  baseURL: "/api", 
+  baseURL: ".", 
 }
 
