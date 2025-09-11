@@ -94,6 +94,11 @@ const DeleteButton = styled.button`
   border-radius: 4px;
   transition: all 0.2s ease;
   margin-left: auto;
+  opacity: 0;
+  
+  ${SpeedResultItem}:hover & {
+    opacity: 1;
+  }
   
   &:hover {
     background: rgba(255, 77, 79, 0.1);
