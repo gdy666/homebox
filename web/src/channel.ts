@@ -126,7 +126,7 @@ export class WorkerChannel<Module extends WorkerExportedModule> {
         })
     } else if (type === 'observe') {
       const { name, args, id } = data
-      console.log(name, args, id)
+      //console.log(name, args, id)
       const obs = this.mod[name](...args) as Observable<any>
       this.subs[id] = obs.subscribe({
         next: (v) => {

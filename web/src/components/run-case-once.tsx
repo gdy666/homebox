@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { useState, useContext } from 'react'
 import { useRates } from '../hooks'
 import { ChannelsContext, ConfigContext } from '../context'
+import { SPEED_TEST_STORAGE_KEY } from '../const'
 import { zip, interval } from 'rxjs'
 import { rateFormatters } from '../utils'
 import { Button, Intent } from '@blueprintjs/core'
@@ -51,7 +52,7 @@ export function RunCaseOnce() {
   const [ttl, pushTTL, clearTTL] = useRates(5)
   const [step, setStep] = useState(RunningStep.NONE)
   const createChannels = useContext(ChannelsContext)
-  const { duration, parallel, packCount, unit,baseURL  } = useContext(ConfigContext)
+  const { duration, parallel, packCount, unit, baseURL } = useContext(ConfigContext)
 
   const _start = async () => {
     clearTTL()
@@ -59,7 +60,7 @@ export function RunCaseOnce() {
     await interval(500)
       .pipe(
         take(10),
-        mergeMap(() => ping(baseURL )),
+        mergeMap(() => ping(baseURL)),
       )
       .forEach((v) => {
         pushTTL(v)
@@ -98,6 +99,32 @@ export function RunCaseOnce() {
       setUlRate(v.reduce((a, b) => a + b, 0))
     })
 
+
+    const pingResult = document.getElementById('ping-result')?.textContent;
+    const downloadResult = document.getElementById('download-result')?.textContent;
+    const uploadResult = document.getElementById('upload-result')?.textContent;
+
+    if (pingResult === '--' || downloadResult === '--' || uploadResult === '--') {
+      console.log("...")
+    } else {
+      // 保存测速结果
+      const storedResults = localStorage.getItem(SPEED_TEST_STORAGE_KEY)
+      const newResult = {
+        timestamp: Date.now(),
+        ping: pingResult,
+        download: downloadResult,
+        upload: uploadResult,
+        baseURL:baseURL,
+      }
+
+      const results = storedResults ? JSON.parse(storedResults) : []
+      results.unshift(newResult)
+      localStorage.setItem(SPEED_TEST_STORAGE_KEY, JSON.stringify(results))
+    }
+
+    // 触发事件通知其他组件
+    window.dispatchEvent(new CustomEvent('speedTestResultsUpdated'))
+
     setStep(RunningStep.DONE)
   }
 
@@ -117,17 +144,17 @@ export function RunCaseOnce() {
       <$Header>
         <$HeaderCase>
           <$CaseTitle>Ping</$CaseTitle>
-          <$CaseContent>{step >= RunningStep.PING ? `${ttl.toFixed(2)} ms` : '--'}</$CaseContent>
+          <$CaseContent id="ping-result">{step >= RunningStep.PING ? `${ttl.toFixed(2)} ms` : '--'}</$CaseContent>
         </$HeaderCase>
 
         <$HeaderCase>
           <$CaseTitle>Download</$CaseTitle>
-          <$CaseContent>{step >= RunningStep.DOWNLOAD ? rateFormatters[unit](dlRate) : '--'}</$CaseContent>
+          <$CaseContent id="download-result">{step >= RunningStep.DOWNLOAD ? rateFormatters[unit](dlRate) : '--'}</$CaseContent>
         </$HeaderCase>
 
         <$HeaderCase>
           <$CaseTitle>Upload</$CaseTitle>
-          <$CaseContent>{step >= RunningStep.UPLOAD ? rateFormatters[unit](ulRate) : '--'}</$CaseContent>
+          <$CaseContent id="upload-result">{step >= RunningStep.UPLOAD ? rateFormatters[unit](ulRate) : '--'}</$CaseContent>
         </$HeaderCase>
       </$Header>
       <SpeedIndicator

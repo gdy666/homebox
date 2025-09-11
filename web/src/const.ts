@@ -15,6 +15,8 @@ const systemTheme = (() => {
   return Theme.Light
 })()
 
+export const SPEED_TEST_STORAGE_KEY = 'homebox:speed-test-results'
+
 export const DEFAULT_CONFIG: Config = {
   duration: 10 * 1000,
   threadCount: 1,
