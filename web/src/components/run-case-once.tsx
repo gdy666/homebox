@@ -1,6 +1,6 @@
 import { SpeedIndicator } from './speed-indicator'
 import styled from '@emotion/styled'
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { useRates } from '../hooks'
 import { ChannelsContext, ConfigContext } from '../context'
 import { SPEED_TEST_STORAGE_KEY } from '../const'
@@ -54,81 +54,112 @@ export function RunCaseOnce() {
   const createChannels = useContext(ChannelsContext)
   const { duration, parallel, packCount, unit, baseURL } = useContext(ConfigContext)
 
+  const sub = useRef<Subscription | null>(null)
+
   const _start = async () => {
     clearTTL()
     setStep(RunningStep.PING)
-    await interval(500)
+    sub.current = interval(500)
       .pipe(
         take(10),
         mergeMap(() => ping(baseURL)),
       )
-      .forEach((v) => {
-        pushTTL(v)
+      .subscribe({
+        next(v) {
+          pushTTL(v)
+        },
+        complete() {
+          createChannels().then(channels => {
+            setStep(RunningStep.DOWNLOAD)
+            sub.current = zip(
+              ...channels.map((channel) =>
+                channel.observe('download', {
+                  duration,
+                  packCount,
+                  parallel,
+                  interval: 500,
+                  baseURL: baseURL,
+                }),
+              ),
+            ).subscribe({
+              next(v) {
+                setDlRate(v.reduce((a, b) => a + b, 0))
+              },
+              complete() {
+                setStep(RunningStep.UPLOAD)
+                sub.current = zip(
+                  ...channels.map((channel) =>
+                    channel.observe('upload', {
+                      duration,
+                      packCount,
+                      parallel,
+                      interval: 500,
+                      baseURL: baseURL,
+                    }),
+                  ),
+                ).subscribe({
+                  next(v) {
+                    setUlRate(v.reduce((a, b) => a + b, 0))
+                  },
+                  complete() {
+                    const pingResult = document.getElementById('ping-result')?.textContent;
+                    const downloadResult = document.getElementById('download-result')?.textContent;
+                    const uploadResult = document.getElementById('upload-result')?.textContent;
+
+                    if (pingResult === '--' || downloadResult === '--' || uploadResult === '--') {
+                      console.log("...")
+                    } else {
+                      // 保存测速结果
+                      const storedResults = localStorage.getItem(SPEED_TEST_STORAGE_KEY)
+                      const newResult = {
+                        timestamp: Date.now(),
+                        ping: pingResult,
+                        download: downloadResult,
+                        upload: uploadResult,
+                        baseURL:baseURL,
+                      }
+
+                      const results = storedResults ? JSON.parse(storedResults) : []
+                      results.unshift(newResult)
+                      localStorage.setItem(SPEED_TEST_STORAGE_KEY, JSON.stringify(results))
+                    }
+
+                    // 触发事件通知其他组件
+                    window.dispatchEvent(new CustomEvent('speedTestResultsUpdated'))
+
+                    setStep(RunningStep.DONE)
+                    sub.current = null
+                  },
+                  error(e) {
+                    console.error(e)
+                    setStep(RunningStep.DONE)
+                    sub.current = null
+                  }
+                })
+              },
+              error(e) {
+                console.error(e)
+                setStep(RunningStep.DONE)
+                sub.current = null
+              }
+            })
+          })
+        },
+        error(e) {
+          console.error(e)
+          setStep(RunningStep.DONE)
+          sub.current = null
+        }
       })
-    const channels = await createChannels()
-
-    setStep(RunningStep.DOWNLOAD)
-    await zip(
-      ...channels.map((channel) =>
-        channel.observe('download', {
-          duration,
-          packCount,
-          parallel,
-          interval: 500,
-          baseURL: baseURL,
-        }),
-      ),
-    ).forEach((v) => {
-      setDlRate(v.reduce((a, b) => a + b, 0))
-    })
-
-
-    setStep(RunningStep.UPLOAD)
-
-    await zip(
-      ...channels.map((channel) =>
-        channel.observe('upload', {
-          duration,
-          packCount,
-          parallel,
-          interval: 500,
-          baseURL: baseURL,
-        }),
-      ),
-    ).forEach((v) => {
-      setUlRate(v.reduce((a, b) => a + b, 0))
-    })
-
-
-    const pingResult = document.getElementById('ping-result')?.textContent;
-    const downloadResult = document.getElementById('download-result')?.textContent;
-    const uploadResult = document.getElementById('upload-result')?.textContent;
-
-    if (pingResult === '--' || downloadResult === '--' || uploadResult === '--') {
-      console.log("...")
-    } else {
-      // 保存测速结果
-      const storedResults = localStorage.getItem(SPEED_TEST_STORAGE_KEY)
-      const newResult = {
-        timestamp: Date.now(),
-        ping: pingResult,
-        download: downloadResult,
-        upload: uploadResult,
-        baseURL:baseURL,
-      }
-
-      const results = storedResults ? JSON.parse(storedResults) : []
-      results.unshift(newResult)
-      localStorage.setItem(SPEED_TEST_STORAGE_KEY, JSON.stringify(results))
-    }
-
-    // 触发事件通知其他组件
-    window.dispatchEvent(new CustomEvent('speedTestResultsUpdated'))
-
-    setStep(RunningStep.DONE)
   }
 
   const start = () => {
+    if (step !== RunningStep.NONE && step !== RunningStep.DONE) {
+      sub.current?.unsubscribe()
+      sub.current = null
+      setStep(RunningStep.DONE)
+      return
+    }
     _start().catch(err => {
       showToast({
         message: `Error, Please check environment`,
@@ -162,8 +193,8 @@ export function RunCaseOnce() {
         running={step !== RunningStep.DONE && step !== RunningStep.NONE}
       />
       <div css={css`${$textCenter}${$mgt[4]}`}>
-        <Button onClick={start} disabled={step !== RunningStep.NONE && step !== RunningStep.DONE}>
-          {RunningStepLabels[step]}
+        <Button onClick={start}>
+          {step !== RunningStep.NONE && step !== RunningStep.DONE ? 'Stop' : RunningStepLabels[step]}
         </Button>
       </div>
     </div>
