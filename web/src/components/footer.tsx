@@ -18,9 +18,9 @@ const SpeedResultsContainer = styled.div`
   min-height: 100px;
   overflow-y: auto;
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.02);
+  background: ${Var(ThemeVar.SpeedTestBg)};
   padding: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: ${Var(ThemeVar.SpeedTestShadow)};
   
   @media (max-width: 768px) {
     max-height: calc(60vh - 60px);
@@ -28,7 +28,7 @@ const SpeedResultsContainer = styled.div`
     font-size: 12px;
     margin: 12px -8px 0;
     border-radius: 0;
-    background: rgba(0, 0, 0, 0.03);
+    background: ${Var(ThemeVar.SpeedTestBg)};
   }
   
   @media (max-width: 480px) {
@@ -41,18 +41,18 @@ const SpeedResultsContainer = styled.div`
 const SpeedResultItem = styled.div`
   margin: 8px 0;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.9);
+  background: ${Var(ThemeVar.SpeedTestItemBg)};
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: ${Var(ThemeVar.SpeedTestItemShadow)};
   transition: all 0.2s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid ${Var(ThemeVar.SpeedTestBorder)};
   
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: ${Var(ThemeVar.SpeedTestItemHoverShadow)};
   }
 
   @media (max-width: 768px) {
@@ -175,7 +175,7 @@ const ResultInfo = styled.div`
 const DeleteButton = styled.button`
   background: none;
   border: none;
-  color: #ff4d4f;
+  color: ${Var(ThemeVar.DeleteButtonColor)};
   cursor: pointer;
   font-size: 12px;
   padding: 6px 10px;
@@ -186,12 +186,12 @@ const DeleteButton = styled.button`
   min-height: 32px;
   
   &:hover {
-    background: rgba(255, 77, 79, 0.1);
+    background: ${Var(ThemeVar.DeleteButtonHoverBg)};
   }
   
   &:active {
     transform: scale(0.95);
-    background: rgba(255, 77, 79, 0.15);
+    background: ${Var(ThemeVar.DeleteButtonActiveBg)};
   }
   
   @media (max-width: 768px) {
@@ -231,8 +231,8 @@ const DeleteActions = styled.div`
 `
 
 const ConfirmButton = styled.button`
-  background: #ff4d4f;
-  color: white;
+  background: ${Var(ThemeVar.ConfirmButtonBg)};
+  color: var(${ThemeVar.ButtonTextColor});
   border: none;
   border-radius: 4px;
   padding: 6px 12px;
@@ -243,7 +243,7 @@ const ConfirmButton = styled.button`
   min-height: 32px;
   
   &:hover {
-    background: #ff7875;
+    background: ${Var(ThemeVar.ConfirmButtonHoverBg)};
   }
   
   &:active {
@@ -267,7 +267,7 @@ const ConfirmButton = styled.button`
 
 const CancelButton = styled.button`
   background: none;
-  border: 1px solid #d9d9d9;
+  border: 1px solid ${Var(ThemeVar.CancelButtonBorder)};
   border-radius: 4px;
   padding: 6px 12px;
   font-size: 12px;
@@ -277,9 +277,9 @@ const CancelButton = styled.button`
   min-height: 32px;
   
   &:hover {
-    border-color: #1890ff;
-    color: #1890ff;
-    background: rgba(24, 144, 255, 0.04);
+    border-color: ${Var(ThemeVar.CancelButtonHoverBorder)};
+    color: ${Var(ThemeVar.CancelButtonHoverColor)};
+    background: ${Var(ThemeVar.CancelButtonHoverBg)};
   }
   
   &:active {
@@ -307,7 +307,7 @@ const ResultsHeader = styled.div`
   align-items: center;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid ${Var(ThemeVar.SpeedTestBorder)};
   font-weight: 600;
   
   @media (max-width: 768px) {
