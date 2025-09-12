@@ -47,16 +47,18 @@ export const SpeedIndicator = memo(function SpeedIndicator({
       `}
     >
       <ProgressBar css={css``} {...pbp} animate={running} />
-      <Tag
-        round={true}
-        css={css`
-          flex: none;
-          margin-left: 8px;
-        `}
-        intent={pbp.intent}
-      >
-        {speed !== undefined ? formatter(speed) : 'Waiting...'}
-      </Tag>
+        {speed !== undefined && (
+                <Tag
+                  round={true}
+                  css={css`
+                    flex: none;
+                    margin-left: 8px;
+                  `}
+                  intent={pbp.intent}
+                >
+                  {formatter(speed)}
+                </Tag>
+              )}
     </div>
   )
 })

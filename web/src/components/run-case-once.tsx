@@ -36,14 +36,16 @@ enum RunningStep {
   DOWNLOAD,
   UPLOAD,
   DONE,
+  STOP
 }
 
 const RunningStepLabels: Record<RunningStep, string> = {
-  [RunningStep.NONE]: 'Start',
+  [RunningStep.NONE]: '开始测速',
   [RunningStep.DOWNLOAD]: 'Downloading',
   [RunningStep.PING]: 'Pinging',
   [RunningStep.UPLOAD]: 'Uploading',
-  [RunningStep.DONE]: 'Restart',
+  [RunningStep.DONE]: '再次测速',
+  [RunningStep.STOP]: '中止测速',
 }
 
 export function RunCaseOnce() {
@@ -195,12 +197,12 @@ export function RunCaseOnce() {
         </$HeaderCase>
 
         <$HeaderCase>
-          <$CaseTitle>Download</$CaseTitle>
+          <$CaseTitle>下载</$CaseTitle>
           <$CaseContent id="download-result">{step >= RunningStep.DOWNLOAD ? rateFormatters[unit](dlRate) : '--'}</$CaseContent>
         </$HeaderCase>
 
         <$HeaderCase>
-          <$CaseTitle>Upload</$CaseTitle>
+          <$CaseTitle>上传</$CaseTitle>
           <$CaseContent id="upload-result">{step >= RunningStep.UPLOAD ? rateFormatters[unit](ulRate) : '--'}</$CaseContent>
         </$HeaderCase>
       </$Header>
@@ -210,7 +212,7 @@ export function RunCaseOnce() {
       />
       <div css={css`${$textCenter}${$mgt[4]}`}>
         <Button onClick={start}>
-          {step !== RunningStep.NONE && step !== RunningStep.DONE ? 'Stop' : RunningStepLabels[step]}
+          {step !== RunningStep.NONE && step !== RunningStep.DONE ? RunningStepLabels[RunningStep.STOP] : RunningStepLabels[step]}
         </Button>
       </div>
     </div>
