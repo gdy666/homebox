@@ -16,7 +16,7 @@ import { Footer } from './components/footer'
 
 const $Container = styled.div`
   padding: 12px 24px;
-  max-width: 864px;
+  max-width: 1000px;
   margin: auto;
   height: 100%;
 `

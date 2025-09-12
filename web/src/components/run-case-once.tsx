@@ -59,6 +59,20 @@ export function RunCaseOnce() {
   const _start = async () => {
     clearTTL()
     setStep(RunningStep.PING)
+
+    // 获取客户端 IP 信息（不影响后续流程）
+    let _ipCtx: { clientIP?: string; clientIPInfo?: any } = {}
+    try {
+      const resp = await fetch(`${baseURL}/ip`, { method: 'GET' })
+      if (resp.ok) {
+        const data = await resp.json()
+        _ipCtx.clientIP = data?.ip
+        if (data?.ipInfo !== undefined) _ipCtx.clientIPInfo = data.ipInfo
+      }
+    } catch (e) {
+      console.warn('fetch ip failed', e)
+    }
+
     sub.current = interval(500)
       .pipe(
         take(10),
@@ -117,6 +131,8 @@ export function RunCaseOnce() {
                         download: downloadResult,
                         upload: uploadResult,
                         baseURL:baseURL,
+                        ip: _ipCtx.clientIP,
+                        ipInfo: _ipCtx.clientIPInfo,
                       }
 
                       const results = storedResults ? JSON.parse(storedResults) : []

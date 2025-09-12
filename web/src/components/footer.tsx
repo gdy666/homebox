@@ -169,6 +169,8 @@ interface SpeedTestResult {
   download: number
   upload: number
   baseURL: string
+  ip:string
+  ipInfo:string
 }
 
 
@@ -259,6 +261,8 @@ export function Footer() {
               <ResultInfo>
                 <div className="timestamp">
                   {new Date(result.timestamp).toLocaleString()}
+
+                  
                 </div>
 
                 <div className="metrics">
@@ -274,10 +278,25 @@ export function Footer() {
                     <span className="label">上传:</span>
                     <span className="value">{result.upload}</span>
                   </div>
-                  <div className="metric">
+
+
+                                    <div className="metric">
                     <span className="label">服务器:</span>
                     <span className="value">{result.baseURL}</span>
                   </div>
+
+                  {(result.ip || result.ipInfo) && (
+                    <div className="metric">
+                      <span className="label">客户端IP:</span>
+                      <span className="value">
+                        {result.ip && result.ipInfo 
+                          ? `${result.ip}（${result.ipInfo}）`
+                          : result.ip || result.ipInfo
+                        }
+                      </span>
+                    </div>
+                  )}
+                  
 
                   {pendingDeleteIndex === index ? (
                   <DeleteActions>
@@ -285,11 +304,15 @@ export function Footer() {
                     <CancelButton onClick={handleDeleteCancel}>取消</CancelButton>
                   </DeleteActions>
                 ) : (
-                  <DeleteButton onClick={() => showDeleteConfirm(index)}>删除</DeleteButton>
+                  <DeleteButton onClick={(e) => {
+                    e.stopPropagation();
+                    showDeleteConfirm(index);
+                  }}>删除</DeleteButton>
                 )}
 
 
                 </div> 
+
               </ResultInfo>
               
             </SpeedResultItem>
