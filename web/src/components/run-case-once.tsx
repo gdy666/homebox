@@ -117,7 +117,11 @@ export function RunCaseOnce() {
                   next(v) {
                     setUlRate(v.reduce((a, b) => a + b, 0))
                   },
-                  complete() {
+                  async complete() {
+                    setStep(RunningStep.DONE)
+                    sub.current = null
+                    await new Promise(resolve => setTimeout(resolve, 500))
+
                     const pingResult = document.getElementById('ping-result')?.textContent;
                     const downloadResult = document.getElementById('download-result')?.textContent;
                     const uploadResult = document.getElementById('upload-result')?.textContent;
@@ -145,8 +149,7 @@ export function RunCaseOnce() {
                     // 触发事件通知其他组件
                     window.dispatchEvent(new CustomEvent('speedTestResultsUpdated'))
 
-                    setStep(RunningStep.DONE)
-                    sub.current = null
+
                   },
                   error(e) {
                     console.error(e)
