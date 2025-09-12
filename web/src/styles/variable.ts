@@ -20,6 +20,9 @@ export enum ThemeVar {
   SpeedTestItemShadow = '--speed-test-item-shadow',
   SpeedTestItemHoverShadow = '--speed-test-item-hover-shadow',
   ButtonTextColor = '--button-text-color',
+  ScrollbarTrackBg = '--scrollbar-track-bg',
+  ScrollbarThumbBg = '--scrollbar-thumb-bg',
+  ScrollbarThumbHoverBg = '--scrollbar-thumb-hover-bg',
 }
 
 export function Var(varName: string, defaultValue?: any) {

@@ -22,6 +22,30 @@ const SpeedResultsContainer = styled.div`
   padding: 12px;
   box-shadow: ${Var(ThemeVar.SpeedTestShadow)};
   
+  /* 滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${Var(ThemeVar.ScrollbarTrackBg)};
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${Var(ThemeVar.ScrollbarThumbBg)};
+    border-radius: 4px;
+    border: 2px solid ${Var(ThemeVar.ScrollbarTrackBg)};
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${Var(ThemeVar.ScrollbarThumbHoverBg)};
+  }
+  
+  /* Firefox 滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: ${Var(ThemeVar.ScrollbarThumbBg)} ${Var(ThemeVar.ScrollbarTrackBg)};
+  
   @media (max-width: 768px) {
     max-height: calc(60vh - 60px);
     padding: 8px;
@@ -29,12 +53,29 @@ const SpeedResultsContainer = styled.div`
     margin: 12px -8px 0;
     border-radius: 0;
     background: ${Var(ThemeVar.SpeedTestBg)};
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      border: 1px solid ${Var(ThemeVar.ScrollbarTrackBg)};
+      border-radius: 3px;
+    }
   }
   
   @media (max-width: 480px) {
     font-size: 11px;
     padding: 6px;
     margin: 12px -6px 0;
+    
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
   }
 `
 

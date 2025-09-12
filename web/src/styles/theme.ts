@@ -21,6 +21,9 @@ export const DarkTheme: Record<ThemeVar, string> = {
   [ThemeVar.SpeedTestItemShadow]: '0 1px 3px rgba(0, 0, 0, 0.08)',
   [ThemeVar.SpeedTestItemHoverShadow]: '0 3px 8px rgba(0, 0, 0, 0.12)',
   [ThemeVar.ButtonTextColor]: '#ffffff',
+  [ThemeVar.ScrollbarTrackBg]: 'rgba(255, 255, 255, 0.05)',
+  [ThemeVar.ScrollbarThumbBg]: 'rgba(255, 255, 255, 0.2)',
+  [ThemeVar.ScrollbarThumbHoverBg]: 'rgba(255, 255, 255, 0.3)',
 }
 
 export const LightTheme: Record<ThemeVar, string> = {
@@ -44,4 +47,7 @@ export const LightTheme: Record<ThemeVar, string> = {
   [ThemeVar.SpeedTestItemShadow]: '0 1px 3px rgba(0, 0, 0, 0.08)',
   [ThemeVar.SpeedTestItemHoverShadow]: '0 3px 8px rgba(0, 0, 0, 0.12)',
   [ThemeVar.ButtonTextColor]: '#ffffff',
+  [ThemeVar.ScrollbarTrackBg]: 'rgba(0, 0, 0, 0.05)',
+  [ThemeVar.ScrollbarThumbBg]: 'rgba(0, 0, 0, 0.2)',
+  [ThemeVar.ScrollbarThumbHoverBg]: 'rgba(0, 0, 0, 0.3)',
 }
