@@ -489,15 +489,15 @@ export function Footer() {
                 <div className="metrics">
                   <div className="metric">
                     <span className="label">Ping:</span>
-                    <span className="value">{result.ping}ms</span>
+                    <span className="value">{result.ping}</span>
                   </div>
                   <div className="metric">
                     <span className="label">下载:</span>
-                    <span className="value">{result.download}Mbps</span>
+                    <span className="value">{result.download}</span>
                   </div>
                   <div className="metric">
                     <span className="label">上传:</span>
-                    <span className="value">{result.upload}Mbps</span>
+                    <span className="value">{result.upload}</span>
                   </div>
 
                   <div className="metric">
