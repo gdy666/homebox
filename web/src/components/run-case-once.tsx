@@ -153,8 +153,10 @@ export function RunCaseOnce() {
                     const pingResult = document.getElementById('ping-result')?.textContent;
                     const downloadResult = document.getElementById('download-result')?.textContent;
                     const uploadResult = document.getElementById('upload-result')?.textContent;
+                    const rawDlRate = document.getElementById('raw-download-rate')?.textContent;
+                    const rawUlRate = document.getElementById('raw-upload-rate')?.textContent;
 
-                    if (pingResult === '--' || downloadResult === '--' || uploadResult === '--') {
+                    if (pingResult === '--' || downloadResult === '--' || uploadResult === '--' || rawDlRate === '-1' || rawUlRate === '-1') {
                       console.log("...")
                     } else {
                       // 保存测速结果
@@ -163,6 +165,8 @@ export function RunCaseOnce() {
                         timestamp: Date.now(),
                         ping: pingResult,
                         download: downloadResult,
+                        rawDlRate: rawDlRate,
+                        rawUlRate: rawUlRate,
                         upload: uploadResult,
                         baseURL:baseURL,
                         ip: _ipCtx.clientIP,
@@ -230,11 +234,13 @@ export function RunCaseOnce() {
         <$HeaderCase>
           <$CaseTitle>下载</$CaseTitle>
           <$CaseContent id="download-result">{step >= RunningStep.DOWNLOAD ? rateFormatters[unit](dlRate) : '--'}</$CaseContent>
+          <div id="raw-download-rate" style={{ display: 'none' }}>{dlRate}</div>
         </$HeaderCase>
 
         <$HeaderCase>
           <$CaseTitle>上传</$CaseTitle>
           <$CaseContent id="upload-result">{step >= RunningStep.UPLOAD ? rateFormatters[unit](ulRate) : '--'}</$CaseContent>
+          <div id="raw-upload-rate" style={{ display: 'none' }}>{ulRate}</div>
         </$HeaderCase>
       </$Header>
       <SpeedIndicator

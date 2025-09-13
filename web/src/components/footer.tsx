@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { $talc } from '../styles/utils'
 import styled from '@emotion/styled'
 import { Var, ThemeVar } from '../styles/variable'
 import { SPEED_TEST_STORAGE_KEY } from '../const'
 import { Dialog, Button, Intent } from '@blueprintjs/core'
+import { rateFormatters } from '../utils'
+import { RateUnit } from '../types'
+import { ConfigContext } from '../context'
 
 const FooterContainer = styled.div`
   ${$talc}
@@ -369,12 +372,14 @@ const ResultsHeader = styled.div`
 
 interface SpeedTestResult {
   timestamp: number
-  ping: number
-  download: number
-  upload: number
+  ping: string
+  rawDlRate: string | number
+  rawUlRate: string | number
+  download: string
+  upload: string
   baseURL: string
-  ip:string
-  ipInfo:string
+  ip: string
+  ipInfo: string
 }
 
 
@@ -382,8 +387,10 @@ interface SpeedTestResult {
 export function Footer() {
   const [speedResults, setSpeedResults] = useState<SpeedTestResult[]>([])
   const [deleteConfirmIndex, setDeleteConfirmIndex] = useState<number | null>(null)
-
   const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null)
+  
+  // 获取当前配置
+  const config = useContext(ConfigContext)
 
   const showDeleteConfirm = (index: number) => {
     setPendingDeleteIndex(index)
@@ -493,11 +500,19 @@ export function Footer() {
                   </div>
                   <div className="metric">
                     <span className="label">下载:</span>
-                    <span className="value">{result.download}</span>
+                    <span className="value">
+                      {result.rawDlRate && result.rawDlRate !== '-1' 
+                        ? rateFormatters[config.unit](Number(result.rawDlRate)) 
+                        : result.download}
+                    </span>
                   </div>
                   <div className="metric">
                     <span className="label">上传:</span>
-                    <span className="value">{result.upload}</span>
+                    <span className="value">
+                      {result.rawUlRate && result.rawUlRate !== '-1' 
+                        ? rateFormatters[config.unit](Number(result.rawUlRate)) 
+                        : result.upload}
+                    </span>
                   </div>
 
                   <div className="metric">
