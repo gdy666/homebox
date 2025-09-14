@@ -103,8 +103,8 @@ export function App() {
                 display: flex;
               `}
             >
-              <CaseRunner title='Download' name='download' />
-              <CaseRunner title='Upload' name='upload' />
+              <CaseRunner title='下载' name='download' />
+              <CaseRunner title='上传' name='upload' />
             </div>
           )}
           <Footer />
