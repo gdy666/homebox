@@ -5,7 +5,7 @@ import { useRates } from '../hooks'
 import { ChannelsContext, ConfigContext } from '../context'
 import { SPEED_TEST_STORAGE_KEY } from '../const'
 import { zip, interval, Subscription } from 'rxjs'
-import { rateFormatters } from '../utils'
+import { rateFormatters, normalizeBaseURL } from '../utils'
 import { Button, Intent } from '@blueprintjs/core'
 import { $textCenter, $mgt } from '../styles/utils'
 import { css } from '@emotion/react'
@@ -66,10 +66,12 @@ export function RunCaseOnce() {
     // 重置连接失败计数
     failedPingCount = 0
 
+    const normalizedBaseURL = normalizeBaseURL(baseURL)
+
     // 获取客户端 IP 信息（不影响后续流程）
     let _ipCtx: { clientIP?: string; clientIPInfo?: any } = {}
     try {
-      const resp = await fetch(`${baseURL}/ip`, { method: 'GET' })
+      const resp = await fetch(`${normalizedBaseURL}/ip`, { method: 'GET' })
       if (resp.ok) {
         const data = await resp.json()
         _ipCtx.clientIP = data?.ip
@@ -84,7 +86,7 @@ export function RunCaseOnce() {
         take(10),
         mergeMap(() => {
           // 捕获 pingws 可能的错误，并返回 Infinity 表示连接失败
-          return pingws(baseURL).catch(err => {
+          return pingws(normalizedBaseURL).catch(err => {
             console.error('WebSocket ping failed:', err)
             return Infinity
           })
@@ -122,7 +124,7 @@ export function RunCaseOnce() {
                   packCount,
                   parallel,
                   interval: 500,
-                  baseURL: baseURL,
+                  baseURL: normalizedBaseURL,
                 }),
               ),
             ).subscribe({
@@ -138,7 +140,7 @@ export function RunCaseOnce() {
                       packCount,
                       parallel,
                       interval: 500,
-                      baseURL: baseURL,
+                      baseURL: normalizedBaseURL,
                     }),
                   ),
                 ).subscribe({
@@ -168,7 +170,7 @@ export function RunCaseOnce() {
                         rawDlRate: rawDlRate,
                         rawUlRate: rawUlRate,
                         upload: uploadResult,
-                        baseURL:baseURL,
+                        baseURL: normalizedBaseURL,
                         ip: _ipCtx.clientIP,
                         ipInfo: _ipCtx.clientIPInfo,
                       }

@@ -31,3 +31,11 @@ export const rateFormatters: Record<RateUnit, RateFormatter> = {
   bit: (rate) => formatBitRate(rate * 8),
   byte: formatByteRate,
 }
+
+/**
+ * 规范化baseURL，移除末尾的斜杠
+ */
+export function normalizeBaseURL(baseURL: string): string {
+  // 移除末尾所有连续的"/"
+  return baseURL.replace(/\/+$/, '')
+}

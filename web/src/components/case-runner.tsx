@@ -4,6 +4,7 @@ import { ChannelsContext, ConfigContext } from '../context'
 import { css } from '@emotion/react'
 import { SpeedIndicator } from './speed-indicator'
 import { Subscription, zip } from 'rxjs'
+import { normalizeBaseURL } from '../utils'
 
 export function CaseRunner(props: { name: 'upload' | 'download'; title: string }) {
   const createChannels = useContext(ChannelsContext)
@@ -21,8 +22,9 @@ export function CaseRunner(props: { name: 'upload' | 'download'; title: string }
     }
     setRunning(true)
     const channels = await createChannels()
+    const normalizedBaseURL = normalizeBaseURL(baseURL)
     sub.current = zip(
-      ...channels.map((channel) => channel.observe(props.name, { packCount, duration, interval: 300, parallel ,baseURL: baseURL,})),
+      ...channels.map((channel) => channel.observe(props.name, { packCount, duration, interval: 300, parallel ,baseURL: normalizedBaseURL,})),
     ).subscribe({
       next(rate) {
         setRate(rate.reduce((a, b) => a + b, 0))
